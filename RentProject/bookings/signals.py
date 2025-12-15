@@ -1,16 +1,8 @@
-# bookings/signals.py
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Booking
-# ЗМІНЕНО: Видаляємо старі імпорти, пов'язані з Graph/Outlook
-# from authentication.views import send_mail_delegated, get_user_access_token
-# import requests
 import logging
-from django.core.mail import EmailMessage # Залишаємо для відправки листа
-# ЗМІНЕНО: Видаляємо дублюючі/непотрібні імпорти з settings
-# from django.core.mail import send_mail 
-# from django.conf import settings 
+from django.core.mail import EmailMessage
 
 logger = logging.getLogger(__name__)
 
@@ -20,16 +12,8 @@ def booking_created_handler(sender, instance, created, **kwargs):
     if not created:
         return
 
-    # -----------------------------------------------------------
-    # ТЕПЕР ФУНКЦІЯ send_booking_notification БІЛЬШЕ НЕ ПОТРЕБУЄ
-    # access_token, тому що ми прибрали логіку Graph.
-    # -----------------------------------------------------------
     send_booking_notification(instance)
 
-
-# bookings/signals.py
-
-# ЗМІНЕНО: Видаляємо access_token з аргументів, оскільки він не використовується
 def send_booking_notification(booking):
     user = booking.user
     subject = f"Booking Confirmation: {booking.item}"
@@ -46,7 +30,6 @@ def send_booking_notification(booking):
     """
 
     try:
-        # ТЕПЕР ВИКОРИСТОВУЄМО ТІЛЬКИ EmailMessage, який імпортовано зверху
         email = EmailMessage(
             subject,
             body_html,
@@ -59,6 +42,3 @@ def send_booking_notification(booking):
         logger.info(f"Local MailHog email sent for booking #{booking.pk}")
     except Exception as e:
         logger.error(f"Failed to send local email for booking #{booking.pk}: {e}")
-
-    # ЛОГІКА MICROSOFT GRAPH ЗАЛИШАЄТЬСЯ ЗАКОМЕНТОВАНОЮ
-    # ...
