@@ -7,7 +7,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class BookingListCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
