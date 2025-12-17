@@ -2,7 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from .serializers import UserSerializer
-from django.contrib.auth.models import User 
 
 
 class RegisterView(APIView):
